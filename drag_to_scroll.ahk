@@ -47,16 +47,16 @@ SuspenOnTarget() {
     ;~ Hotkey, RButton, Off
     Suspend, On
     Menu, Tray, Icon, %A_ScriptDir%\dragiconpaused.ico ; doesn't work
-    TrayTip, , DragToScroll is Suspended
-    Sleep 1000
-    HideTrayTip()
+    ; TrayTip, , DragToScroll is Suspended
+    ; Sleep 1000
+    ; HideTrayTip()
   } else if (A_IsSuspended == 1 && !WinActive("ahk_group suspendGroup")) {
     Suspend, Off
     Menu, Tray, Icon, %A_ScriptDir%\dragicon.ico
     Send, {Ctrl Up} {Ctrl Down} {Ctrl Up} ; to unstuck Ctrl key
-    TrayTip, , DragToScroll is Running
-    Sleep 1000
-    HideTrayTip()
+    ; TrayTip, , DragToScroll is Running
+    ; Sleep 1000
+    ; HideTrayTip()
   }
 }
 
