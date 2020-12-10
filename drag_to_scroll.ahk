@@ -26,7 +26,7 @@ http://www.autohotkey.com/forum/viewtopic.php?t=46226
 ; list of windows to suspend on
 suspendWindows := ["League of Legends.exe"
 ,"csgo.exe", "Northgard.exe", "RDR2.exe"
-, "P4G.exe", "Unity.exe"]
+, "P4G.exe", "Unity.exe", "Cyberpunk2077.exe"]
 
 Loop, % suspendWindows.Length()
 {
