@@ -27,11 +27,11 @@ SuspenOnTarget() {
     GoSub, DragStop ; safety measure. force stop all drags
     Suspend, On
     showNotification("Script Suspended")
-    Menu, Tray, Icon, % A_ScriptDir "\dragiconpaused.ico" ; doesn't work
+    Menu, Tray, Icon, % A_ScriptDir "\res\dragiconpaused.ico" ; doesn't work
   } else if (A_IsSuspended == 1 && !WinActive("ahk_group suspendGroup")) {
     Suspend, Off
     showNotification("Script Resumed")
-    Menu, Tray, Icon, %A_ScriptDir%\dragicon.ico
+    Menu, Tray, Icon, %A_ScriptDir%\res\dragicon.ico
     Send, {Ctrl Up} {Ctrl Down} {Ctrl Up} ; to unstuck Ctrl key
   }
 }
@@ -1241,7 +1241,7 @@ MenuInit:
 
   ; remove standard, and add name (w/ reload)
   Menu, Tray, NoStandard
-  Menu, Tray, Icon, %A_ScriptDir%\dragicon.ico
+  Menu, Tray, Icon, %A_ScriptDir%\res\dragicon.ico
   Menu, Tray, Add, Drag To Scroll v%VERSION%, dummy
   Menu, Tray, Default, Drag To Scroll v%VERSION%
   Menu, Tray, add, Toggle Pause, togglePause
@@ -1561,6 +1561,6 @@ showNotification(message) {
   , FlashColor: "0xA8CEFF"
   , ShowDelay:200, Radius:15
   , Time: 3000, Size: 20, Flash: 500
-  , Icon: A_ScriptDir "\dragicon.ico"
+  , Icon: A_ScriptDir "\res\dragicon.ico"
   , Animate: "Blend"})
 }
