@@ -23,40 +23,40 @@ http://www.autohotkey.com/forum/viewtopic.php?t=46226
 ;~ #NoTrayIcon
 #Include %A_ScriptDir%\ini.ahk
 
+global appName := "Drag to Scroll"
+
+; Read Windows to Suspend 
+suspendFile := A_ScriptDir "\suspend_list.txt" 
+
+FileRead, r, % suspendFile
+
 ; list of windows to suspend on
-suspendWindows := ["League of Legends.exe"
-,"csgo.exe", "Northgard.exe", "RDR2.exe"
-, "P4G.exe", "Unity.exe", "Cyberpunk2077.exe"]
+suspendWindows := StrSplit(r, "`n") 
+
+; msgbox % suspendWindows.Length() 
 
 Loop, % suspendWindows.Length()
-{
   GroupAdd, suspendGroup, % "ahk_exe" . suspendWindows[A_Index]
-}
 
 ; Timer to check for windows and suspend if needed
 SetTimer, SuspenOnTarget, 1000
 
 ; initiate drag to scroll
-GoSub, Init
+GoSub, Ini t 
 
 Return
 
 SuspenOnTarget() {
   If (WinActive("ahk_group suspendGroup") && A_IsSuspended == 0) {
     GoSub, DragStop ; safety measure. force stop all drags
-    ;~ Hotkey, RButton, Off
     Suspend, On
-    Menu, Tray, Icon, %A_ScriptDir%\dragiconpaused.ico ; doesn't work
-    ; TrayTip, , DragToScroll is Suspended
-    ; Sleep 1000
-    ; HideTrayTip()
+    TrayTip, % appName, Script Suspended
+    Menu, Tray, Icon, % A_ScriptDir "\dragiconpaused.ico" ; doesn't work
   } else if (A_IsSuspended == 1 && !WinActive("ahk_group suspendGroup")) {
     Suspend, Off
+    TrayTip, % appName, Script Resumed
     Menu, Tray, Icon, %A_ScriptDir%\dragicon.ico
     Send, {Ctrl Up} {Ctrl Down} {Ctrl Up} ; to unstuck Ctrl key
-    ; TrayTip, , DragToScroll is Running
-    ; Sleep 1000
-    ; HideTrayTip()
   }
 }
 
@@ -297,11 +297,6 @@ Init:
 
   ; Initialize menus & Hotkeys
   Gosub, MenuInit
-
-  ; Initialize icons
-  ;~ Menu, Tray, Icon
-  ;~ GoSub, TrayIconInit
-  ;~ GoSub, UpdateTrayIcon
 
   ; Initialize GUI for new cursor
   if (ChangeMouseCursor) && (ChangedCursorStyle = "cursorScrollPointer")
