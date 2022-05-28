@@ -2,6 +2,7 @@
 #Persistent
 #NoEnv
 #Include %A_ScriptDir%\ini.ahk
+#Include %A_ScriptDir%\Lib\Notify.ahk
 
 global appName := "Drag to Scroll"
 global suspendFile := A_ScriptDir "\suspend_list.txt" 
@@ -25,11 +26,11 @@ SuspenOnTarget() {
   If (WinActive("ahk_group suspendGroup") && A_IsSuspended == 0) {
     GoSub, DragStop ; safety measure. force stop all drags
     Suspend, On
-    TrayTip, % appName, Script Suspended
+    showNotification("Script Suspended")
     Menu, Tray, Icon, % A_ScriptDir "\dragiconpaused.ico" ; doesn't work
   } else if (A_IsSuspended == 1 && !WinActive("ahk_group suspendGroup")) {
     Suspend, Off
-    TrayTip, % appName, Script Resumed
+    showNotification("Script Resumed")
     Menu, Tray, Icon, %A_ScriptDir%\dragicon.ico
     Send, {Ctrl Up} {Ctrl Down} {Ctrl Up} ; to unstuck Ctrl key
   }
@@ -1548,6 +1549,18 @@ Check_for_PressedDown_Keys:
   {
     ToolTip, You just pressed LButton but you can modify this
     gosub, Check_for_PressedDown_Keys_OFF
-  } else {
+  } else { 
 
-  } return
+  } return  
+
+showNotification(message) {
+  Notify:=Notify(15)
+  Notify.AddWindow(message
+  , {Title: "Drag To Scroll" , TitleColor: "White"
+  , Background: "Grey", Color: "White", Font: "Consolas"
+  , FlashColor: "0xA8CEFF"
+  , ShowDelay:200, Radius:15
+  , Time: 3000, Size: 20, Flash: 500
+  , Icon: A_ScriptDir "\dragicon.ico"
+  , Animate: "Blend"})
+}
