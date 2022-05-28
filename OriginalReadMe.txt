@@ -18,6 +18,23 @@ Installation:
 
   Configuration files will be created on the fly.
 
+Extra info:
+  DragToScroll.ahk
+
+  new discussion:
+  https://autohotkey.com/boards/viewtopic.php?f=6&t=38457
+
+  old discussion:
+  http://www.autohotkey.com/forum/viewtopic.php?t=59726
+  https://autohotkey.com/board/topic/55289-dragtoscroll-universal-drag-flingflick-scrolling/
+
+  Scroll any active window by clicking and dragging with the right mouse button. 
+  Should not interfere with normal right clicking. 
+  See the discussion link above for more information.
+
+  This script has one dependency, on Tuncay's ini lib, found at:
+  http://www.autohotkey.com/forum/viewtopic.php?t=46226
+
 History:
 
   v1.0 Jun.28.2010

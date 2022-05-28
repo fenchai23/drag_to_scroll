@@ -1,26 +1,6 @@
-/*
-DragToScroll.ahk
-
-new discussion:
-https://autohotkey.com/boards/viewtopic.php?f=6&t=38457
-
-old discussion:
-http://www.autohotkey.com/forum/viewtopic.php?t=59726
-https://autohotkey.com/board/topic/55289-dragtoscroll-universal-drag-flingflick-scrolling/
-
-Scroll any active window by clicking and dragging with the right mouse button. 
-Should not interfere with normal right clicking. 
-See the discussion link above for more information.
-
-This script has one dependency, on Tuncay's ini lib, found at:
-http://www.autohotkey.com/forum/viewtopic.php?t=46226
-
-*/
-
 #SingleInstance Force
 #Persistent
 #NoEnv
-;~ #NoTrayIcon
 #Include %A_ScriptDir%\ini.ahk
 
 global appName := "Drag to Scroll"
@@ -29,14 +9,14 @@ global suspendFile := A_ScriptDir "\suspend_list.txt"
 ; list of windows to suspend on
 suspendWindows := getSuspendWindows(suspendFile) 
 
-; add  groups to suspend
+; add  groups to suspend 
 Loop, % suspendWindows.Length()
   GroupAdd, suspendGroup, % "ahk_exe" . suspendWindows[A_Index]
 
 ; Timer to check for windows and suspend if needed
 SetTimer, SuspenOnTarget, 1000
 
-; initiate drag to scroll
+; initiate drag to scroll 
 GoSub, Init 
 
 Return
@@ -163,7 +143,6 @@ ApplySettings:
   ; If enabled, simple gestures are detected, (only supports flick UDLR)
   ; and gesture events are called for custom actions, 
   ; rather than dragging with momentum.
-  Setting("UseGestureCheck", false)
   Setting("GestureThreshold", 30)
   Setting("GesturePageSize", 15)
   Setting("GestureBrowserNames", "chrome.exe,firefox.exe,iexplore.exe")
@@ -173,10 +152,10 @@ ApplySettings:
   Setting("ChangeMouseCursor", true)
 
   ; If the above ChangeMouseCursor setting is true, this determines what cursor style
-  ; Choose either:
+  ; Choose either: 
   ;       "cursorHand"           -  the original DragToScroll hand icon
   ;       "cursorScrollPointer"  -  the scrollbar and pointer icon (SYNTPRES.ico)
-  ;                                 this cursor will mostly stay stationary but you should
+  ;                                 this cursor will mostly stay stationary but you should 
   ;                                 still have the KeepCursorStationary set to 'true'
   Setting("ChangedCursorStyle", "cursorScrollPointer")
 
@@ -189,39 +168,9 @@ Return
 ; User-Customizable Handlers
 ;--------------------------------
 
-; double-click handler
-; this label is called by DoubleClickCheck
-;
-ButtonDoubleClick:
-  ; change this to whatever you want to happen at Button double-click 
-  ; default behavior below toggles "slow mode"
-
-  ; close the menu that probably popped up   
-  ; the extra "menu" popup is unavoidable. 
-  ; You may however attempt to close it automatically 
-  ; this may yield unintended results, sending a random {esc}
-  ;~ Sleep 200
-  ;~ Send {Esc}
-
-  ;~ slowSpeed := .5
-  ;~ bSlowMode := !bSlowMode
-  ;~ Tooltip((bSlowMode ? "Slow" : "Fast") . " Mode")
-
-  ;~ if (bSlowMode)
-  ;~ {
-  ;~ SpeedY *= slowSpeed
-  ;~ SpeedX *= slowSpeed
-  ;~ }
-  ;~ else
-  ;~ {
-  ;~ SpeedY /= slowSpeed
-  ;~ SpeedX /= slowSpeed
-  ;~ }
-Return
-
 ; Handlers for gesture actions
 ; The Up/Down gestures will scroll the page 
-;
+; 
 GestureU:
   if (WinProcessName = "AcroRd32.exe")
     Send, ^{PgDn}
@@ -434,23 +383,11 @@ Return
 ; Hotkey Handler for button up
 ;
 ButtonUp:
-
-  ; Check for a double-click
-  ; DoubleClickCheck may mark DragStatus as HANDLED
-  if (UseDoubleClickCheck)
-    GoSub CheckDoubleClick
-
   ; abort any pending checks to click/hold mouse
   ; and release any holds already started.
   SetTimer, MovementCheck, Off
   if (DragStatus == DS_HOLDING && GetKeyState(Button))
     GoSub, HoldStop
-
-  ; If status is still NEW (not already dragging, or otherwise handled),
-  ; then the user has released before the drag threshold.
-  ; Check if the user has performed a gesture.
-  if (DragStatus == DS_NEW && UseGestureCheck)
-    GoSub, GestureCheck
 
   ; If status is STILL NEW (not a gesture either)
   ; then user has quick press-released, without moving.
@@ -818,33 +755,6 @@ Scroll(arg, horizontal="", format="px")
       }
     }
 
-    ; Handler to check for a double-click of the right mouse button
-    ; (press-release-press-release), quickly.
-    ; This is called every time the button is released.
-    ;
-    ; We assume that if the mouse button was released,
-    ; then it had to be pressed down to begin with (reasonable?);
-    ; this should be handled by AHK's 'Critical' declaration.
-    ;
-    CheckDoubleClick:
-      if (!UseDoubleClickCheck)
-        return
-
-      ; Record latest button release time and
-      ; Calculate difference between previous click-release and re-click
-      ; if the difference is below the threshold, treat it as a double-click
-      TimeOfLastButtonUp := A_TickCount
-      DClickDiff := TimeOfLastButtonUp - TimeOf2ndLastButtonDown
-      if (DClickDiff <= DoubleClickThreshold)
-      {
-        ; Mark the status as Handled,
-        ; so the user-configurable ButtonDoubleClick doesn't have to
-        ; Call the user defined function.
-        DragStatus := DS_HANDLED
-        GoSub ButtonDoubleClick
-      }
-    Return
-
     ; Handler to check for edge scrolling
     ; Activated when the mouse is dragging and stops
     ; within a set threshold of the window's edge
@@ -873,25 +783,6 @@ Scroll(arg, horizontal="", format="px")
         ; the second arg requests the scroll at the set speed without accel
         arg := (InLowerHalf ? 1 : -1) * (Get("InvertDrag") ? -1 : 1) * Get("EdgeScrollSpeed")
         Scroll(arg, false, "speed")
-      }
-    Return
-
-    ; Handler to check for gesture actions
-    ; This handler only supports simple "flick" gestures; 
-    ; because the whole gesture needs to be completed before DragThreshold,
-    ; and also makes the logic easy, by a simple threshold
-    ;
-    GestureCheck:
-      MouseGetPos, MoveX, MoveY
-      MoveAmount := (abs(OriginalY-MoveY) >= abs(OriginalX-MoveX)) ? OriginalY-MoveY : OriginalX-MoveX
-      MoveDirection := (abs(OriginalY-MoveY) >= abs(OriginalX-MoveX)) ? (OriginalY>MoveY ? "U" : "D") : (OriginalX>MoveX ? "L" : "R")
-
-      ; If the move amount is above the threshold,
-      ; Immediately stop/cancel dragging and call the correct gesture handler  
-      if (abs(MoveAmount) >= GestureThreshold)
-      {
-        GoSub, DragStop
-        GoSub, Gesture%MoveDirection%
       }
     Return
 
