@@ -24,17 +24,12 @@ http://www.autohotkey.com/forum/viewtopic.php?t=46226
 #Include %A_ScriptDir%\ini.ahk
 
 global appName := "Drag to Scroll"
-
-; Read Windows to Suspend 
-suspendFile := A_ScriptDir "\suspend_list.txt" 
-
-FileRead, r, % suspendFile
+global suspendFile := A_ScriptDir "\suspend_list.txt" 
 
 ; list of windows to suspend on
-suspendWindows := StrSplit(r, "`n") 
+suspendWindows := getSuspendWindows(suspendFile) 
 
-; msgbox % suspendWindows.Length() 
-
+; add  groups to suspend
 Loop, % suspendWindows.Length()
   GroupAdd, suspendGroup, % "ahk_exe" . suspendWindows[A_Index]
 
@@ -42,7 +37,7 @@ Loop, % suspendWindows.Length()
 SetTimer, SuspenOnTarget, 1000
 
 ; initiate drag to scroll
-GoSub, Ini t 
+GoSub, Init 
 
 Return
 
@@ -60,13 +55,9 @@ SuspenOnTarget() {
   }
 }
 
-HideTrayTip() {
-  TrayTip ; Attempt to hide it the normal way.
-  if SubStr(A_OSVersion,1,3) = "10." {
-    Menu Tray, NoIcon
-    Sleep 200 ; It may be necessary to adjust this sleep.
-    Menu Tray, Icon
-  }
+getSuspendWindows(f) {
+  FileRead, r, % f
+  return StrSplit(r, "`n")
 }
 
 ApplySettings:
