@@ -33,7 +33,7 @@ SuspenOnTarget() {
     showNotification("Script Resumed")
     Menu, Tray, Icon, %A_ScriptDir%\res\dragicon.ico
     Send, {Ctrl Up} {Ctrl Down} {Ctrl Up} ; to unstuck Ctrl key
-  }
+  } 
 }
 
 getSuspendWindows(f) {
@@ -242,7 +242,7 @@ Init:
   ; Initialize GUI for new cursor
   if (ChangeMouseCursor) && (ChangedCursorStyle = "cursorScrollPointer")
   {
-    Gui, 98: Add, Pic, x0 y0 w35 h-1 vMyIconVar hWndMyIconHwnd, %A_ScriptDir%\cursor.png ; 0x3 = SS_ICON
+    Gui, 98: Add, Pic, x0 y0 w35 h-1 vMyIconVar hWndMyIconHwnd, %A_ScriptDir%\res\cursor.png ; 0x3 = SS_ICON
     Gui, 98: Color, gray
     Gui, 98: +LastFound -Caption +AlwaysOnTop +ToolWindow
     WinSet, TransColor, gray

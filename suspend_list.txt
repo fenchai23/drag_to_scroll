@@ -6,3 +6,5 @@ P4G.exe
 Unity.exe
 Cyberpunk2077.exe
 Going Medieval.exe
+GenshinImpact.exe
+valheim.exe
